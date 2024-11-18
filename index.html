@@ -1,0 +1,1495 @@
+<html><head><base href="">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyDexID Generator</title>
+  <style>
+    /* Estilos */
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+    :root {
+      --primary-color: #2980b9;
+      --secondary-color: #27ae60;
+      --chiral-color: #9b59b6;
+      --background-color: #ecf0f1;
+      --text-color: #2c3e50;
+      --muted-text-color: #7f8c8d;
+      --border-color: #bdc3c7;
+      --highlight-color: #e74c3c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      padding: 20px;
+      background-color: var(--primary-color);
+      color: #fff;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      display: flex;
+      padding: 20px;
+      flex-wrap: wrap; /* Allow wrapping on small screens */
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 450px;
+      min-width: 300px; /* Add min-width */
+      padding: 20px;
+      background-color: #fff;
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .sidebar p.instructions {
+      font-size: 0.9em;
+      color: var(--muted-text-color);
+      margin-bottom: 15px;
+    }
+
+    .sidebar label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 500;
+    }
+
+    .sidebar select,
+    .sidebar button,
+    .sidebar input[type="text"],
+    .sidebar input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1em;
+    }
+
+    .sidebar .mutations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .mutation-item {
+      padding: 10px 15px;
+      background-color: var(--secondary-color);
+      color: #fff;
+      border-radius: 4px;
+      cursor: grab;
+      user-select: none;
+      transition: background-color 0.2s;
+      touch-action: none; /* Prevent scrolling while dragging */
+    }
+
+    .mutation-item:hover {
+      background-color: #2ecc71;
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    /* Add to existing CSS */
+    .content h2 {
+      color: var(--text-color);
+      margin: 0 0 15px 0;
+      font-weight: 500;
+      font-size: 1.3em;
+      text-align: left;  /* Change from center to left */
+      width: 600px;  /* Match width of circular display */
+      text-align: center;  /* Center within the 600px width */
+    }
+
+    /* Canvas y Objetivos de Dropeo */
+    #circular-display {
+      position: relative;
+      margin: 0 auto;
+      width: 600px;
+      height: 600px;
+      background-color: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-target {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: rgba(231, 76, 60, 0.2);
+      border: 2px solid var(--highlight-color);
+      transform: translate(-50%, -50%);
+      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .drop-target.active {
+      background-color: rgba(46, 204, 113, 0.3);
+    }
+
+    .drop-target.chiral {
+      border-color: var(--chiral-color);
+      background-color: rgba(155, 89, 182, 0.2);
+      box-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    .mutation-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background-color: var(--secondary-color);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .mutation-label.has-chiral {
+      background-color: var(--chiral-color);
+      box-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+    }
+
+    .chiral-center {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      border: 2px solid var(--border-color);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+    }
+
+    .chiral-center.active {
+      border-color: var(--chiral-color);
+      background-color: rgba(155, 89, 182, 0.2);
+      box-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    /* Nomenclatura */
+    .nomenclature {
+      margin-top: 30px;
+    }
+
+    .nomenclature h3 {
+      margin-bottom: 10px;
+    }
+
+    .nomenclature pre {
+      background-color: #fff;
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
+    .nomenclature .buttons {
+      margin-top: 10px;
+    }
+
+    .nomenclature .buttons button {
+      margin-right: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--primary-color);
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .nomenclature .buttons button:hover {
+      background-color: #2980b9;
+    }
+
+    /* Help Panels */
+    .help-panel {
+      margin-top: 20px;
+    }
+
+    .help-panel:first-of-type {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .help-panel:first-of-type .collapsible {
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 1.1em;
+      border-radius: 4px;
+    }
+
+    .help-panel:first-of-type .collapsible:hover {
+      background-color: #3498db;
+    }
+
+    .help-panel:first-of-type .collapsible-content {
+      border: 2px solid var(--primary-color);
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+    }
+
+    .collapsible {
+      background-color: #f1f1f1;
+      cursor: pointer;
+      padding: 15px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .collapsible:after {
+      content: '\02795'; /* Unicode character for "plus" sign (+) */
+      font-size: 13px;
+    }
+
+    .active:after {
+      content: "\2796"; /* Unicode character for "minus" sign (-) */
+    }
+
+    .collapsible-content {
+      padding: 0 15px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+      background-color: #fff;
+      border: 1px solid var(--border-color);
+      border-top: none;
+    }
+
+    .collapsible-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+
+    .collapsible-content table th,
+    .collapsible-content table td {
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      text-align: left;
+    }
+
+    .collapsible-content table th {
+      background-color: #f9f9f9;
+    }
+
+    /* Diseño Responsivo */
+    @media (max-width: 1200px) {
+      .molecule-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .molecule-display {
+        margin-top: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .content {
+        padding-top: 20px;
+      }
+
+      #circular-display,
+      .molecule-display {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        aspect-ratio: 1/1;
+      }
+      
+      .content h2 {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto 15px auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.5em;
+      }
+      
+      .sidebar {
+        padding: 10px;
+      }
+      
+      .content {
+        padding: 10px;
+      }
+    }
+
+    /* Hidden Drop Zone for Removing Mutations */
+    #mutation-remove-zone {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background: rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    /* Add to existing CSS */
+    .molecule-container {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 20px; /* Add spacing between elements */
+      flex-wrap: wrap; /* Allow wrapping on small screens */
+      justify-content: center; /* Center items when wrapped */
+    }
+
+    .molecule-display {
+      margin-left: 0; /* Remove left margin since we're using gap */
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 600px;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .molecule-display img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .molecule-info {
+      background: transparent; /* Removed background */
+      border: none; /* Removed border */
+      padding: 0; /* Removed padding */
+      margin-top: 15px; /* Keep margin-top */
+      line-height: 1.5;  /* Reduced from 1.6 */
+      font-size: 0.9em;  /* Added smaller font size */
+    }
+
+    .molecule-info p {
+      margin: 0.5em 0;  /* Reduce vertical margins between paragraphs */
+    }
+
+    .molecule-info ul {
+      margin: 0.5em 0;
+      padding-left: 1.2em;  /* Reduce left padding of list */
+    }
+
+    .molecule-info li {
+      margin: 0.25em 0;  /* Reduce space between list items */
+    }
+
+    .molecule-info strong {
+      color: var(--primary-color);
+    }
+
+    .molecule-info em {
+      font-style: normal;
+      background: rgba(41, 128, 185, 0.1);
+      padding: 0 4px;
+      border-radius: 3px;
+    }
+
+    /* Add to existing CSS */
+    .dragging {
+      opacity: 0.8;
+      z-index: 1000;
+      pointer-events: none; /* Prevent interference while dragging */
+    }
+
+    /* Prevent text selection while dragging on mobile */
+    .mutation-item {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h1>CyDexID Generator</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="help-panel">
+          <button type="button" class="collapsible">Usage Instructions</button>
+          <div class="collapsible-content">
+            <p>This application generates CyDexID nomenclature for cyclodextrin molecules through an interactive interface:</p>
+            
+            <ol style="margin: 10px 0 20px 25px; line-height: 1.4;">
+              <li><strong>Basic Setup:</strong>
+                <ul style="margin: 5px 0 10px 20px;">
+                  <li>Select the number of residues (3-15) using the control panel</li>
+                  <li>The circular diagram shows the cyclodextrin structure where each point represents a glucose residue</li>
+                </ul>
+              </li>
+              
+              <li><strong>Adding Modifications:</strong>
+                <ul style="margin: 5px 0 10px 20px;">
+                  <li>Drag mutations from the sidebar to specific positions in the diagram</li>
+                  <li>Position 6 points inward, while positions 2 and 3 point outward</li>
+                  <li>Create custom mutations using the "Add New Mutation" field</li>
+                </ul>
+              </li>
+              
+              <li><strong>Managing Chirality:</strong>
+                <ul style="margin: 5px 0 10px 20px;">
+                  <li>Double-click on mutation circles (positions 2, 3, 6) to toggle chirality changes</li>
+                  <li>Smaller circles at positions 1 and 4 represent additional chiral centers</li>
+                  <li>Double-click these centers to indicate chirality modifications</li>
+                </ul>
+              </li>
+              
+              <li><strong>Editing & Output:</strong>
+                <ul style="margin: 5px 0 10px 20px;">
+                  <li>Remove mutations by dragging their labels outside the diagram area</li>
+                  <li>The nomenclature updates automatically in three formats below</li>
+                  <li>Use the copy buttons to easily transfer the generated codes</li>
+                </ul>
+              </li>
+            </ol>
+
+            <p style="margin-top: 15px;"><em>Tip: Refer to the collapsible help panels in the sidebar for detailed information about position codes and chiral center configurations.</em></p>
+          </div>
+        </div>
+
+        <h2>Controls</h2>
+
+        <label for="residue-count">Number of Residues (3-15):</label>
+        <input type="number" id="residue-count" min="3" max="15" value="7">
+
+        <label>Available Mutations:</label>
+        <div class="mutations" id="mutation-list">
+          <div class="mutation-item" draggable="true" data-type="SBE">SBE</div>
+          <div class="mutation-item" draggable="true" data-type="HP">HP</div>
+          <div class="mutation-item" draggable="true" data-type="MET">MET</div>
+        </div>
+
+        <label for="new-mutation">Add New Mutation:</label>
+        <input type="text" id="new-mutation" placeholder="Enter mutation code">
+        <button id="add-mutation-button">Add Mutation</button>
+
+        <!-- Help Panels -->
+        <div class="help-panel">
+          <button type="button" class="collapsible">Substitution Position Codes</button>
+          <div class="collapsible-content">
+            <p>The position code follows a binary system for three possible substitution positions (2, 3 and 6):</p>
+            <table>
+              <tr>
+                <th>Code</th>
+                <th>Positions</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Position 2</td>
+                <td>Substitution in position 2 only</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Position 3</td>
+                <td>Substitution in position 3 only</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Position 6</td>
+                <td>Substitution in position 6 only</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Positions 2,3</td>
+                <td>Simultaneous substitution in positions 2 and 3</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Positions 2,6</td>
+                <td>Simultaneous substitution in positions 2 and 6</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Positions 3,6</td>
+                <td>Simultaneous substitution in positions 3 and 6</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Positions 2,3,6</td>
+                <td>Simultaneous substitution in all positions</td>
+              </tr>
+            </table>
+          </div>
+
+          <button type="button" class="collapsible">Chiral Center Conformations</button>
+          <div class="collapsible-content">
+            <p>By default, all glucose residues have natural chirality. Modifications at chiral centers are specified using specific position codes, with one digit per residue in the sequence:</p>
+            
+            <h4>For positions 2, 3 and 6 (RS236):</h4>
+            <p>Each residue in the sequence uses the same position codes as substitutions (2,3,5,6,8,9,1). The prefix RS236 applies to the entire sequence.</p>
+            <table>
+              <tr>
+                <th>Code</th>
+                <th>Positions</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Position 2</td>
+                <td>Change of chirality at position 2</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Position 3</td>
+                <td>Change of chirality at position 3</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Positions 2,3</td>
+                <td>Changes of chirality at positions 2 and 3</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Position 6</td>
+                <td>Change of chirality at position 6</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Positions 2,6</td>
+                <td>Changes of chirality at positions 2 and 6</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Positions 3,6</td>
+                <td>Changes of chirality at positions 3 and 6</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Positions 2,3,6</td>
+                <td>Changes of chirality at all positions</td>
+              </tr>
+            </table>
+
+            <h4>For positions 1 and 4 (RS14):</h4>
+            <p>Each residue in the sequence uses codes (1,4,5) for anomeric (1) and ring (4) positions. The prefix RS14 applies to the entire sequence.</p>
+            <table>
+              <tr>
+                <th>Code</th>
+                <th>Positions</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Position 1</td>
+                <td>Change of chirality at position 1</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Position 4</td>
+                <td>Change of chirality at position 4</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Positions 1,4</td>
+                <td>Changes of chirality at positions 1 and 4</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Content Area -->
+      <div class="content">
+        <h2>Interactive Work Area</h2>
+        <div class="molecule-container">
+          <div id="circular-display">
+            <!-- The Canvas and Drop Targets will be generated by JavaScript -->
+          </div>
+          <div class="molecule-display">
+            <img src="/GPUfinal.png" 
+                 alt="molecule diagrams showing a simplified representation of a molecule with numbered nodes connected by lines of varying colors on the left, and a more detailed, chemically accurate representation with numbered nodes, bonds, and chemical symbols on the right" 
+                 width="600" 
+                 height="600">
+            <div class="molecule-info">
+              <p>In the cyclodextrin representation, each <strong>green circle represents an entire glucopyranose ring</strong>, simplifying its detailed structure. The numbers <em>(1, 2, 3, 4, and 6)</em> correspond to key features of the glucopyranose unit:</p>
+              
+              <ul>
+                <li><strong>Positions 1 and 4</strong> are chiral centers</li>
+                <li><strong>Positions 2, 3, and 6</strong> are both chiral centers and potential sites for substitution, as indicated by the "R" groups</li>
+              </ul>
+
+              <p>This schematic allows clear visualization of both the chiral centers and the specific substitution sites, streamlining the complex molecular structure into an intuitive and interactive format that preserves all chemically relevant information.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nomenclature -->
+        <div class="nomenclature">
+          <h3>Generated Nomenclature</h3>
+          
+          <h4>Canonical Extended Nomenclature (CyDexID-EC)</h4>
+          <pre id="canonical-extended-nomenclature">No mutations applied.</pre>
+
+          <h4>Extended Nomenclature (CyDexID-E)</h4>
+          <pre id="extended-nomenclature">No mutations applied.</pre>
+
+          <h4>Compact Nomenclature (CyDexID-S)</h4>
+          <pre id="compact-nomenclature">No mutations applied.</pre>
+
+          <div class="buttons">
+            <button onclick="copyText('canonical-extended-nomenclature')">Copy Canonical Extended Nomenclature</button>
+            <button onclick="copyText('extended-nomenclature')">Copy Extended Nomenclature</button>
+            <button onclick="copyText('compact-nomenclature')">Copy Compact Nomenclature</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Hidden Drop Zone for Removing Mutations -->
+  <div id="mutation-remove-zone"></div>
+
+  <!-- JavaScript Code -->
+  <script>
+    // Variables
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const circularDisplay = document.getElementById('circular-display');
+    const residueCountInput = document.getElementById('residue-count');
+    const extendedNomenclatureOutput = document.getElementById('extended-nomenclature');
+    const compactNomenclatureOutput = document.getElementById('compact-nomenclature');
+    const canonicalExtendedNomenclatureOutput = document.getElementById('canonical-extended-nomenclature');
+    const mutationList = document.getElementById('mutation-list');
+    const newMutationInput = document.getElementById('new-mutation');
+    const addMutationButton = document.getElementById('add-mutation-button');
+    const removeZone = document.getElementById('mutation-remove-zone');
+    let residueCount = parseInt(residueCountInput.value);
+    let mutations = [];
+    let chiralMutations = [];
+
+    // Get CSS variables in JavaScript
+    const rootStyles = getComputedStyle(document.documentElement);
+    const primaryColor = rootStyles.getPropertyValue('--primary-color').trim();
+    const secondaryColor = rootStyles.getPropertyValue('--secondary-color').trim();
+    const chiralColor = rootStyles.getPropertyValue('--chiral-color').trim();
+    const highlightColor = rootStyles.getPropertyValue('--highlight-color').trim();
+
+    // Initialize Canvas
+    canvas.width = 600;
+    canvas.height = 600;
+    circularDisplay.appendChild(canvas);
+
+    // Event Listeners
+    residueCountInput.addEventListener('change', updateResidueCount);
+    addMutationButton.addEventListener('click', addNewMutation);
+
+    // Event Listeners for Help Panels
+    document.querySelectorAll('.collapsible').forEach(button => {
+      button.addEventListener("click", function() {
+        this.classList.toggle("active");
+        const content = this.nextElementSibling;
+        if (content.style.maxHeight) {
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+
+    // Show the remove zone when dragging starts
+    document.addEventListener('dragstart', (event) => {
+      if (event.target.classList.contains('mutation-label')) {
+        removeZone.style.display = 'block';
+      }
+    });
+
+    // Hide the remove zone when dragging ends
+    document.addEventListener('dragend', (event) => {
+      if (event.target.classList.contains('mutation-label')) {
+        removeZone.style.display = 'none';
+      }
+    });
+
+    // Prevent default behavior for the remove zone to allow drop
+    removeZone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      removeZone.style.background = 'rgba(231, 76, 60, 0.2)'; // Highlight remove zone
+    });
+
+    removeZone.addEventListener('dragleave', () => {
+      removeZone.style.background = 'rgba(0,0,0,0.1)';
+    });
+
+    removeZone.addEventListener('drop', (event) => {
+      event.preventDefault();
+      removeZone.style.display = 'none';
+      removeZone.style.background = 'rgba(0,0,0,0.1)';
+      
+      try {
+        const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+        
+        // Remove the mutation
+        const mutationIndex = mutations.findIndex(m => 
+          m.residueIndex === data.residueIndex && 
+          m.position === data.position &&
+          m.mutationType === data.mutationType
+        );
+        
+        if (mutationIndex !== -1) {
+          mutations.splice(mutationIndex, 1);
+          const label = document.querySelector(`.mutation-label[data-residue-index="${data.residueIndex}"][data-position="${data.position}"][data-type="${data.mutationType}"]`);
+          if (label) {
+            label.remove();
+          }
+          updateNomenclature();
+        }
+      } catch (error) {
+        console.error('Error removing mutation:', error);
+      }
+    });
+
+    // Initialize
+    drawStructure();
+    createDropTargets();
+    updateNomenclature();
+
+    // Add dragstart listeners to existing mutations
+    document.querySelectorAll('.mutation-item').forEach(item => {
+      addDragAndTouchHandlers(item);
+    });
+
+    // Functions
+    function addDragAndTouchHandlers(element) {
+      // Mouse events
+      element.addEventListener('dragstart', handleDragStart);
+      
+      // Touch events
+      element.addEventListener('touchstart', handleTouchStart, {passive: false});
+      element.addEventListener('touchmove', handleTouchMove, {passive: false});
+      element.addEventListener('touchend', handleTouchEnd);
+    }
+
+    function handleTouchStart(event) {
+      event.preventDefault();
+      const touch = event.touches[0];
+      const element = event.currentTarget;
+      
+      // Store initial touch position
+      element.touchStartX = touch.pageX;
+      element.touchStartY = touch.pageY;
+      
+      // Store the mutation type
+      if(element.dataset.type) {
+        element.touchData = element.dataset.type;
+      } else if(element.classList.contains('mutation-label')) {
+        element.touchData = JSON.stringify({
+          residueIndex: parseInt(element.dataset.residueIndex),
+          position: parseInt(element.dataset.position),
+          mutationType: element.dataset.type
+        });
+      }
+      
+      // Add dragging class for visual feedback
+      element.classList.add('dragging');
+    }
+
+    function handleTouchMove(event) {
+      event.preventDefault();
+      const touch = event.touches[0];
+      const element = event.currentTarget;
+      
+      // Get element dimensions and position
+      const rect = element.getBoundingClientRect();
+      const elementWidth = rect.width;
+      const elementHeight = rect.height;
+      
+      // Calculate new position accounting for element size and scroll
+      const newX = touch.pageX - (elementWidth / 2);
+      const newY = touch.pageY - (elementHeight / 2);
+      
+      // Move the element
+      element.style.position = 'fixed';
+      element.style.left = newX + 'px';
+      element.style.top = newY + 'px';
+      
+      // Find drop target under touch point
+      const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+      
+      // Remove active class from all drop targets
+      document.querySelectorAll('.drop-target').forEach(target => {
+        target.classList.remove('active');
+      });
+      
+      // Add active class if over valid drop target
+      if(dropTarget && dropTarget.classList.contains('drop-target')) {
+        dropTarget.classList.add('active');
+      }
+    }
+
+    function handleTouchEnd(event) {
+      event.preventDefault();
+      const element = event.currentTarget;
+      const touch = event.changedTouches[0];
+      
+      // Find drop target using clientX/clientY instead of pageX/pageY
+      const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+      
+      if(dropTarget && dropTarget.classList.contains('drop-target')) {
+        // Handle drop
+        if(element.classList.contains('mutation-label')) {
+          // Handle removing mutation
+          const data = JSON.parse(element.touchData);
+          const mutationIndex = mutations.findIndex(m =>
+            m.residueIndex === data.residueIndex &&
+            m.position === data.position &&
+            m.mutationType === data.mutationType
+          );
+          if(mutationIndex !== -1) {
+            mutations.splice(mutationIndex, 1);
+            element.remove();
+            updateNomenclature();
+          }
+        } else {
+          // Handle new mutation
+          const residueIndex = parseInt(dropTarget.dataset.residueIndex);
+          const position = parseInt(dropTarget.dataset.position);
+          const mutationType = element.touchData;
+          
+          // Check for existing mutation
+          const existingMutation = mutations.find(mutation =>
+            mutation.residueIndex === residueIndex &&
+            mutation.position === position
+          );
+          
+          if(!existingMutation) {
+            mutations.push({residueIndex, position, mutationType});
+            displayMutationLabel(residueIndex, position, mutationType);
+            updateNomenclature();
+          }
+        }
+      }
+      
+      // Reset element
+      element.classList.remove('dragging');
+      element.style.position = '';
+      element.style.left = '';
+      element.style.top = '';
+      
+      // Remove active class from all drop targets
+      document.querySelectorAll('.drop-target').forEach(target => {
+        target.classList.remove('active');
+      });
+    }
+
+    function updateResidueCount() {
+      let newCount = parseInt(residueCountInput.value);
+      if (newCount < 3 || newCount > 15) {
+        alert('Please enter a number of residues between 3 and 15.');
+        residueCountInput.value = residueCount;
+        return;
+      }
+      residueCount = newCount;
+      mutations = [];
+      chiralMutations = [];
+      drawStructure();
+      createDropTargets();
+      updateNomenclature();
+    }
+
+    function drawStructure() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 200;
+
+      // Draw main circle
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Draw residues
+      for (let i = 0; i < residueCount; i++) {
+        const angle = (i * 2 * Math.PI) / residueCount - Math.PI / 2;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
+        // Draw circle for each residue
+        ctx.beginPath();
+        ctx.arc(x, y, 12, 0, Math.PI * 2);
+        ctx.fillStyle = secondaryColor;
+        ctx.fill();
+
+        // Draw residue number
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 14px Roboto';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(i + 1, x, y);
+      }
+    }
+
+    function createDropTargets() {
+      // Remove only drop targets and chiral centers, preserve mutation labels
+      const existingElements = document.querySelectorAll('.drop-target, .chiral-center');
+      existingElements.forEach(el => el.remove());
+
+      // Create new drop targets and chiral centers
+      for (let i = 0; i < residueCount; i++) {
+        const angle = (i * 2 * Math.PI) / residueCount - Math.PI / 2;
+        const positions = [1, 2, 3, 4, 6];
+
+        positions.forEach(pos => {
+          let offsetAngle, distance, className;
+
+          if (pos === 6) {
+            // Position 6 towards the inside
+            offsetAngle = angle;
+            distance = 170;
+            className = 'drop-target';
+          } else if (pos === 2 || pos === 3) {
+            // Positions 2 and 3 towards the outside
+            const direction = pos === 2 ? -1 : 1;
+            offsetAngle = angle + (direction * Math.PI / 20); // Changed from Math.PI / 16 to Math.PI / 20 for closer positioning
+            distance = 230;
+            className = 'drop-target';
+          } else if (pos === 1 || pos === 4) {
+            // Positions 1 and 4 (chiral centers)
+            const direction = pos === 1 ? -1 : 1;
+            offsetAngle = angle + (direction * Math.PI / 16); // Changed from Math.PI/12 to Math.PI/16 for closer positioning
+            distance = 195; // Changed from 200 to 195 to bring them closer to residue
+            className = 'chiral-center';
+            
+            // Get residue center coordinates for line drawing
+            const residueX = canvas.width / 2 + 200 * Math.cos(angle);
+            const residueY = canvas.height / 2 + 200 * Math.sin(angle);
+            
+            // Draw connecting line
+            ctx.beginPath();
+            ctx.moveTo(residueX, residueY);
+            const x = canvas.width / 2 + distance * Math.cos(offsetAngle);
+            const y = canvas.height / 2 + distance * Math.sin(offsetAngle);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = '#9b59b6'; // Use chiral color
+            ctx.lineWidth = 1;
+            ctx.setLineDash([2, 2]); // Make line dashed
+            ctx.stroke();
+            ctx.setLineDash([]); // Reset line style
+          }
+
+          const x = canvas.width / 2 + distance * Math.cos(offsetAngle);
+          const y = canvas.height / 2 + distance * Math.sin(offsetAngle);
+
+          const element = document.createElement('div');
+          element.className = className;
+          element.style.left = `${x}px`;
+          element.style.top = `${y}px`;
+          element.dataset.residueIndex = i;
+          element.dataset.position = pos;
+
+          if (className === 'drop-target') {
+            element.addEventListener('dragover', handleDragOver);
+            element.addEventListener('drop', handleDrop);
+            element.addEventListener('dragleave', () => element.classList.remove('active'));
+            element.addEventListener('dblclick', handleChiralDoubleClick);
+
+            // Check if there is a chiral mutation in this position
+            const isChiral = chiralMutations.some(mutation =>
+              mutation.residueIndex === i && mutation.position === pos
+            );
+            if (isChiral) {
+              element.classList.add('chiral');
+            } else {
+              element.classList.remove('chiral');
+            }
+
+            circularDisplay.appendChild(element);
+
+            // Draw lines from the residue to the drop target
+            const residueX = canvas.width / 2 + 200 * Math.cos(angle);
+            const residueY = canvas.height / 2 + 200 * Math.sin(angle);
+
+            ctx.beginPath();
+            ctx.moveTo(residueX, residueY);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = highlightColor;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          } else {
+            // Chiral centers in positions 1 and 4
+            element.addEventListener('dblclick', handleChiralDoubleClick);
+
+            // Check if there is a chiral mutation in this position
+            const isChiral = chiralMutations.some(mutation =>
+              mutation.residueIndex === i && mutation.position === pos
+            );
+            if (isChiral) {
+              element.classList.add('active');
+            } else {
+              element.classList.remove('active');
+            }
+
+            circularDisplay.appendChild(element);
+          }
+        });
+      }
+    }
+
+    function handleChiralDoubleClick(event) {
+      const residueIndex = parseInt(event.currentTarget.dataset.residueIndex);
+      const position = parseInt(event.currentTarget.dataset.position);
+
+      const existingChiralMutationIndex = chiralMutations.findIndex(mutation =>
+        mutation.residueIndex === residueIndex && mutation.position === position
+      );
+
+      if (existingChiralMutationIndex !== -1) {
+        // Remove existing chiral mutation
+        chiralMutations.splice(existingChiralMutationIndex, 1);
+      } else {
+        // Add new chiral mutation
+        chiralMutations.push({ residueIndex, position });
+      }
+
+      // Update the visual state of drop targets without removing mutation labels
+      const dropTargets = document.querySelectorAll(`.drop-target[data-residue-index="${residueIndex}"][data-position="${position}"]`);
+      dropTargets.forEach(target => {
+        if (existingChiralMutationIndex !== -1) {
+          target.classList.remove('chiral');
+        } else {
+          target.classList.add('chiral');
+        }
+      });
+
+      // Update mutation labels' appearance
+      const mutationLabels = document.querySelectorAll(`.mutation-label[data-residue-index="${residueIndex}"][data-position="${position}"]`);
+      mutationLabels.forEach(label => {
+        if (existingChiralMutationIndex !== -1) {
+          label.classList.remove('has-chiral');
+        } else {
+          label.classList.add('has-chiral');
+        }
+      });
+
+      // Update chiral centers without removing mutation labels
+      const chiralCenters = document.querySelectorAll(`.chiral-center[data-residue-index="${residueIndex}"][data-position="${position}"]`);
+      chiralCenters.forEach(center => {
+        if (existingChiralMutationIndex !== -1) {
+          center.classList.remove('active');
+        } else {
+          center.classList.add('active');
+        }
+      });
+
+      updateNomenclature();
+    }
+
+    function handleDragStart(event) {
+      event.dataTransfer.setData('text/plain', event.currentTarget.dataset.type);
+    }
+
+    function handleDragOver(event) {
+      event.preventDefault();
+      event.currentTarget.classList.add('active');
+    }
+
+    function handleDrop(event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('active');
+
+      const mutationType = event.dataTransfer.getData('text/plain');
+      const residueIndex = parseInt(event.currentTarget.dataset.residueIndex);
+      const position = parseInt(event.currentTarget.dataset.position);
+
+      // Check if there's already any mutation in this position and residue
+      const existingMutation = mutations.find(mutation =>
+        mutation.residueIndex === residueIndex &&
+        mutation.position === position
+      );
+
+      if (existingMutation) {
+        // If there's already a mutation in this position, don't allow a new one
+        if (existingMutation.mutationType !== mutationType) {
+          alert('This position already has a mutation. Remove it first before adding a new one.');
+        }
+        return;
+      }
+
+      // Add new mutation
+      mutations.push({ residueIndex, position, mutationType });
+      displayMutationLabel(residueIndex, position, mutationType);
+      updateNomenclature();
+    }
+
+    function displayMutationLabel(residueIndex, position, mutationType) {
+      const dropTarget = document.querySelector(`.drop-target[data-residue-index="${residueIndex}"][data-position="${position}"]`);
+
+      // Remove existing label if there is one
+      const existingLabel = document.querySelector(`.mutation-label[data-residue-index="${residueIndex}"][data-position="${position}"][data-type="${mutationType}"]`);
+      if (existingLabel) existingLabel.remove();
+
+      // Create new label
+      const label = document.createElement('div');
+      label.className = 'mutation-label';
+      
+      // Check if there is a chiral mutation in this position
+      const hasChiral = chiralMutations.some(mutation => 
+        mutation.residueIndex === residueIndex && 
+        mutation.position === position
+      );
+      
+      if (hasChiral) {
+        label.classList.add('has-chiral');
+      }
+      
+      label.style.left = dropTarget.style.left;
+      label.style.top = dropTarget.style.top;
+      label.dataset.residueIndex = residueIndex;
+      label.dataset.position = position;
+      label.dataset.type = mutationType;
+      label.textContent = `${mutationType} (${position})`;
+      label.draggable = true;
+
+      // Update the dragstart handler to use text/plain
+      label.addEventListener('dragstart', (e) => {
+        const data = JSON.stringify({
+          residueIndex: parseInt(residueIndex),
+          position: parseInt(position),
+          mutationType: mutationType
+        });
+        e.dataTransfer.setData('text/plain', data);
+      });
+
+      circularDisplay.appendChild(label);
+    }
+
+    function removeMutationLabel(residueIndex, position, mutationType) {
+      const label = document.querySelector(`.mutation-label[data-residue-index="${residueIndex}"][data-position="${position}"][data-type="${mutationType}"]`);
+      if (label) label.remove();
+    }
+
+    function updateNomenclature() {
+      if (mutations.length === 0 && chiralMutations.length === 0) {
+        extendedNomenclatureOutput.textContent = 'No mutations applied.';
+        compactNomenclatureOutput.textContent = 'No mutations applied.';
+        canonicalExtendedNomenclatureOutput.textContent = 'No mutations applied.';
+        return;
+      }
+
+      // Initialize variables
+      let extendedNomenclature = '';
+      let compactNomenclature = '';
+
+      // Build Compact Nomenclature
+      const typeCounts = {};
+      mutations.forEach(mutation => {
+        if (!typeCounts[mutation.mutationType]) typeCounts[mutation.mutationType] = 0;
+        // Instead of counting residues with mutations, count individual substitutions
+        typeCounts[mutation.mutationType]++;
+      });
+
+      const sortedTypes = Object.keys(typeCounts).sort((a, b) => {
+        return typeCounts[b] - typeCounts[a] || a.localeCompare(b);
+      });
+
+      sortedTypes.forEach(type => {
+        compactNomenclature += `${type}${typeCounts[type]}`;
+      });
+
+      compactNomenclature += `_${residueCount}u`;
+
+      // Build Extended Nomenclature for Substitutions
+      sortedTypes.forEach(type => {
+        const positions = new Array(residueCount).fill('0');
+        let totalSubstitutions = 0;
+        mutations.forEach(mutation => {
+          if (mutation.mutationType === type) {
+            const index = mutation.residueIndex;
+            const existingCode = positions[index];
+            const code = calculatePositionCode(existingCode, mutation.position);
+            positions[index] = code.toString();
+            totalSubstitutions++;
+          }
+        });
+        extendedNomenclature += `${type}_${totalSubstitutions}_${residueCount}x${positions.join('')}_`;
+      });
+
+      // Build Extended Nomenclature for Chirality
+      const chiralPositions = {
+        RS14: new Array(residueCount).fill('0'),
+        RS236: new Array(residueCount).fill('0')
+      };
+
+      // Group mutations by residue and type
+      const chiralByResidue = {};
+      chiralMutations.forEach(mutation => {
+        const key = mutation.residueIndex;
+        if (!chiralByResidue[key]) {
+          chiralByResidue[key] = {
+            RS14: [],
+            RS236: []
+          };
+        }
+        
+        if ([1, 4].includes(mutation.position)) {
+          chiralByResidue[key].RS14.push(mutation.position);
+        } else {
+          chiralByResidue[key].RS236.push(mutation.position);
+        }
+      });
+
+      // Calculate codes for each residue
+      Object.entries(chiralByResidue).forEach(([residueIndex, types]) => {
+        if (types.RS14.length > 0) {
+          chiralPositions.RS14[residueIndex] = calculateChiralPositionCode(types.RS14, 'RS14');
+        }
+        if (types.RS236.length > 0) {
+          chiralPositions.RS236[residueIndex] = calculateChiralPositionCode(types.RS236, 'RS236');
+        }
+      });
+
+      // Add chirality strings to the extended nomenclature
+      Object.entries(chiralPositions).forEach(([type, positions]) => {
+        if (positions.some(pos => pos !== '0')) {
+          extendedNomenclature += `${type}-${positions.join('')}_`;
+        }
+      });
+
+      // Remove the last underscore
+      if (extendedNomenclature.endsWith('_')) {
+        extendedNomenclature = extendedNomenclature.slice(0, -1);
+      }
+
+      // Calculate and display canonical extended nomenclature
+      const canonicalExtended = calculateCanonicalExtendedNomenclature(extendedNomenclature);
+      canonicalExtendedNomenclatureOutput.textContent = canonicalExtended;
+
+      // Update Outputs
+      extendedNomenclatureOutput.textContent = extendedNomenclature;
+      compactNomenclatureOutput.textContent = compactNomenclature;
+    }
+
+    function calculatePositionCode(existingCode, newPosition) {
+      const positionMap = {
+        '0': [],
+        '1': [2, 3, 6],
+        '2': [2],
+        '3': [3],
+        '5': [2, 3],
+        '6': [6],
+        '8': [2, 6],
+        '9': [3, 6]
+      };
+
+      let positions = positionMap[existingCode] ? [...positionMap[existingCode]] : [];
+      if (!positions.includes(newPosition)) positions.push(newPosition);
+
+      // Determine the new code based on the updated positions
+      positions.sort((a, b) => a - b);
+      if (positions.length === 3) return '1';
+      if (positions.length === 2) {
+        if (positions.includes(2) && positions.includes(3)) return '5';
+        if (positions.includes(2) && positions.includes(6)) return '8';
+        if (positions.includes(3) && positions.includes(6)) return '9';
+      }
+      if (positions.length === 1) return positions[0].toString();
+      return '0';
+    }
+
+    function calculateChiralPositionCode(positions, mutationType) {
+      positions.sort((a, b) => a - b);
+
+      if (mutationType === 'RS14') {
+        // Simple logic for RS14: 
+        // position 1 only = '1'
+        // position 4 only = '4'  
+        // both positions 1 and 4 = '5'
+        if (positions.includes(1) && positions.includes(4)) {
+          return '5';
+        }
+        if (positions.includes(1)) {
+          return '1'; 
+        }
+        if (positions.includes(4)) {
+          return '4';
+        }
+        return '0';
+      }
+
+      if (mutationType === 'RS236') {
+        if (positions.includes(2) && positions.includes(3) && positions.includes(6)) return '1';
+        if (positions.includes(2) && positions.includes(3)) return '5';
+        if (positions.includes(2) && positions.includes(6)) return '8';
+        if (positions.includes(3) && positions.includes(6)) return '9';
+        if (positions.includes(2)) return '2';
+        if (positions.includes(3)) return '3';
+        if (positions.includes(6)) return '6';
+        return '0';
+      }
+
+      return '0';
+    }
+
+    function calculateCanonicalExtendedNomenclature(extendedNomenclature) {
+      if (!extendedNomenclature || extendedNomenclature === 'No mutations applied.') {
+        return 'No mutations applied.';
+      }
+
+      // Split into substrings
+      const parts = extendedNomenclature.split('_');
+      
+      // Find first sequence
+      let firstSequence = '';
+      for (let i = 0; i < parts.length; i++) {
+        if (parts[i].match(/^\d+x/)) {
+          firstSequence = parts[i].replace(/^\d+x/, '');
+          break;
+        }
+      }
+      
+      if (!firstSequence) return extendedNomenclature;
+
+      // Generate cyclic permutations
+      const permutations = [];
+      for (let i = 0; i < firstSequence.length; i++) {
+        permutations.push(
+          firstSequence.slice(i) + firstSequence.slice(0, i)
+        );
+      }
+
+      // Find permutation with smallest numeric value
+      const permutationIndex = permutations.indexOf(
+        permutations.reduce((a, b) => 
+          parseInt(a) < parseInt(b) ? a : b
+        )
+      );
+
+      // Apply this permutation to all sequences
+      const canonicalParts = parts.map(part => {
+        if (part.match(/^\d+x/)) {
+          const prefix = part.match(/^\d+x/)[0];
+          const sequence = part.replace(/^\d+x/, '');
+          return prefix + sequence.slice(permutationIndex) + sequence.slice(0, permutationIndex);
+        } else if (part.match(/^RS/)) {
+          const [prefix, sequence] = part.split('-');
+          return prefix + '-' + sequence.slice(permutationIndex) + sequence.slice(0, permutationIndex);
+        }
+        return part;
+      });
+
+      return canonicalParts.join('_');
+    }
+
+    function copyText(elementId) {
+      const text = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(text)
+        .then(() => alert('Text copied to clipboard!'))
+        .catch(err => console.error('Error copying text:', err));
+    }
+
+    function addNewMutation() {
+      const mutationType = newMutationInput.value.trim();
+      if (mutationType === '') {
+        alert('Please enter a mutation code.');
+        return;
+      }
+
+      // Check if the mutation already exists
+      const existingMutation = mutationList.querySelector(`.mutation-item[data-type="${mutationType}"]`);
+      if (existingMutation) {
+        alert('This mutation already exists.');
+        newMutationInput.value = '';
+        return;
+      }
+
+      // Create new mutation item
+      const mutationItem = document.createElement('div');
+      mutationItem.className = 'mutation-item';
+      mutationItem.draggable = true;
+      mutationItem.dataset.type = mutationType;
+      mutationItem.textContent = mutationType;
+
+      // Add both drag and touch handlers
+      addDragAndTouchHandlers(mutationItem);
+
+      mutationList.appendChild(mutationItem);
+      newMutationInput.value = '';
+    }
+  </script>
+
+</body>
+</html>
+
