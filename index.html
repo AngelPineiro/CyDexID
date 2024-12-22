@@ -1,21 +1,21 @@
 <html><head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EQRSB44D9L"></script>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGHXERB50T"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-EQRSB44D9L');
+  gtag('config', 'G-FGHXERB50T');
 </script>
-  
+
   
   <base href="">
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CyDexID Generator</title>
+  <title>CyDexID Generator: This tool generates unambiguous nomenclature for cyclodextrin monomers</title>
   <style>
     /* Estilos */
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
@@ -46,6 +46,10 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      transform: scale(0.8);
+      transform-origin: top left;
+      width: 125%;
+      min-height: 125vh;
     }
 
     /* Header */
@@ -157,6 +161,34 @@
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    
+    #circular-display::before {
+      content: "CD structure mapped onto its chiral center representation";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 1.3em;
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+      #circular-display::after {
+      content: "Double-click on the pink or white circles to change the conformation of those chiral centers.\A Drag a functional group from the menu and drop it into the pink circles.";
+      position: absolute;
+      bottom: 0px;
+      left: 2px;
+      right: 5px;
+      text-align: Left;
+      font-size: 0.9em;
+      color: var(--text-color);
+      white-space: pre;
+      line-height: 1.6;
+      padding: 10px;
+      background-color: transparent;
+      border-radius: 8px;
+    }
 
     canvas {
       width: 100%;
@@ -220,6 +252,8 @@
       background-color: rgba(155, 89, 182, 0.2);
       box-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
       transform: translate(-50%, -50%) scale(1.3);
+      isolation: isolate;
+      overflow: hidden;
     }
 
     /* Nomenclatura */
@@ -280,9 +314,52 @@
     }
 
     .help-panel:first-of-type .collapsible-content {
-      border: 2px solid var(--primary-color);
-      border-top: none;
-      border-radius: 0 0 4px 4px;
+      padding: 8px;
+    }
+
+    .help-panel:first-of-type .collapsible-content p {
+      margin: 3px 0;
+    }
+
+    .help-panel:first-of-type .collapsible-content ol {
+      margin: 3px 0;
+      padding-left: 15px;
+    }
+
+    .help-panel:first-of-type .collapsible-content ul {
+      margin: 0;
+      padding-left: 12px;
+    }
+
+    .help-panel:first-of-type .collapsible-content li {
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .help-panel:not(:first-of-type) table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+
+    .help-panel:not(:first-of-type) th,
+    .help-panel:not(:first-of-type) td {
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      text-align: left;
+    }
+
+    .help-panel:not(:first-of-type) th {
+      background-color: #f5f5f5;
+      font-weight: 500;
+    }
+
+    .help-panel:not(:first-of-type) tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    .help-panel:not(:first-of-type) .collapsible-content {
+      padding: 15px;
     }
 
     .collapsible {
@@ -310,30 +387,108 @@
     }
 
     .collapsible-content {
-      padding: 0 15px;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.2s ease-out;
-      background-color: #fff;
-      border: 1px solid var(--border-color);
-      border-top: none;
+      display: none; /* Oculto por defecto */
     }
 
-    .collapsible-content table {
+    /* Estilo especial para el primer panel */
+    .help-panel:first-of-type .collapsible {
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 1.1em;
+      border-radius: 4px;
+    }
+
+    .help-panel:first-of-type .collapsible:hover {
+      background-color: #3498db;
+    }
+
+    .help-panel:first-of-type .collapsible-content {
+      padding: 8px;
+    }
+
+    .help-panel:first-of-type .collapsible-content p {
+      margin: 3px 0;
+    }
+
+    .help-panel:first-of-type .collapsible-content ol {
+      margin: 3px 0;
+      padding-left: 15px;
+    }
+
+    .help-panel:first-of-type .collapsible-content ul {
+      margin: 0;
+      padding-left: 12px;
+    }
+
+    .help-panel:first-of-type .collapsible-content li {
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .help-panel:not(:first-of-type) table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 15px;
+      margin: 10px 0;
     }
 
-    .collapsible-content table th,
-    .collapsible-content table td {
+    .help-panel:not(:first-of-type) th,
+    .help-panel:not(:first-of-type) td {
       border: 1px solid var(--border-color);
       padding: 8px;
       text-align: left;
     }
 
-    .collapsible-content table th {
-      background-color: #f9f9f9;
+    .help-panel:not(:first-of-type) th {
+      background-color: #f5f5f5;
+      font-weight: 500;
+    }
+
+    .help-panel:not(:first-of-type) tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    .help-panel:not(:first-of-type) .collapsible-content {
+      padding: 15px;
+    }
+
+    .collapsible-content p {
+      margin: 3px 0;
+    }
+
+    .collapsible-content ol {
+      margin: 3px 0;
+      padding-left: 15px;
+    }
+
+    .collapsible-content ul {
+      margin: 0;
+      padding-left: 12px;
+    }
+
+    .collapsible-content li {
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .collapsible-content em {
+      font-size: 0.9em;
+    }
+
+    /* Ajustar el espaciado entre secciones principales */
+    .collapsible-content > ol > li {
+      margin-bottom: 2px;
+    }
+
+    /* Eliminar casi todo el espaciado entre elementos de lista anidados */
+    .collapsible-content ul li {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Reducir el espacio después de cada sección principal */
+    .collapsible-content > ol > li > strong {
+      margin-bottom: 1px;
+      display: inline-block;
     }
 
     /* Diseño Responsivo */
@@ -420,8 +575,8 @@
       background-color: #fff;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      width: 600px;
-      height: 600px;
+      width: 400px;
+      height: 500px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -431,6 +586,8 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+      width: 400px;
+      height: 500px;
     }
 
     .molecule-info {
@@ -479,16 +636,498 @@
       -webkit-user-select: none;
       user-select: none;
     }
+
+    .molecule-container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      justify-content: center;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .controls-panel {
+      background-color: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 500px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background-color: var(--primary-color);
+      padding: 15px 0;
+      border-radius: 0;
+      margin: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .panel-header h2 {
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-weight: 500;
+      font-size: 1.3em;
+      text-align: center;
+    }
+
+    .panel-content {
+      padding: 20px;
+    }
+
+    .controls-panel label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .controls-panel input[type="number"],
+    .controls-panel input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1em;
+    }
+
+    .controls-panel button {
+      width: 100%;
+      padding: 10px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.2s;
+    }
+
+    .controls-panel button:hover {
+      background-color: #3498db;
+    }
+
+    .controls-panel .mutations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .mutation-item {
+      padding: 10px 15px;
+      background-color: var(--secondary-color);
+      color: #fff;
+      border-radius: 4px;
+      cursor: grab;
+      user-select: none;
+      transition: background-color 0.2s;
+    }
+
+    .mutation-item:hover {
+      background-color: #2ecc71;
+    }
+
+    @media (max-width: 1200px) {
+      .molecule-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .controls-panel {
+        width: 100%;
+        max-width: 600px;
+        margin-top: 20px;
+      }
+    }
+
+    .share-popup {
+      display: none; /* Asegurarse de que está oculto por defecto */
+      margin-top: 10px;
+    }
+
+    .share-popup.active {
+      display: flex; /* Solo se mostrará cuando tenga la clase 'active' */
+      gap: 10px;
+    }
+
+    .share-popup input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .share-popup button {
+      white-space: nowrap;
+      padding: 8px 15px;
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .share-section {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .share-section button {
+      margin-bottom: 10px;
+    }
+
+    .clean-tool {
+      margin: 15px 0;
+    }
+
+    .clean-tool-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background-color: var(--primary-color);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border: none;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .clean-tool-text {
+      color: white;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+
+    #clean-mode-status {
+      font-weight: bold;
+    }
+
+    #clean-mutation-button {
+      background: transparent;
+      border: 2px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 12px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+      text-decoration: none;
+      outline: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    #clean-mutation-button::before,
+    #clean-mutation-button::after {
+      display: none;
+    }
+
+    #clean-mutation-button svg {
+      width: 30px;
+      height: 30px;
+      fill: white;
+    }
+
+    #clean-mutation-button:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+
+    /* Estilo cuando está activo */
+    .clean-tool-container.active {
+      background-color: var(--highlight-color);
+      border: none;
+      outline: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+
+    /* Nuevo CSS específico para eliminar las líneas */
+    .chiral-center::before,
+    .chiral-center::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    .chiral-center {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    /* Asegurarse de que no hay decoraciones extra */
+    .chiral-center.active::before,
+    .chiral-center.active::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    /* Agregar estos estilos al CSS existente */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+    }
+    
+    .modal-content {
+      background-color: #f8f9fa;
+      margin: 2% auto;
+      padding: 30px;
+      border: none;
+      width: 95%;
+      max-width: 1600px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .modal-content h2 {
+      color: #2c3e50;
+      font-size: 24px;
+      margin-bottom: 25px;
+      font-weight: 500;
+      text-align: center;
+    }
+    
+    .close {
+      color: #666;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      padding: 5px 10px;
+      margin: -20px -20px 0 0;
+    }
+    
+    .close:hover {
+      color: #e74c3c;
+    }
+    
+    .structure-content {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 20px;
+      margin-top: 20px;
+      justify-content: space-between;
+    }
+    
+    .structure-panel {
+      flex: 1;
+      min-width: 45%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    #structure2d {
+      width: 100%;
+      height: 600px;
+      object-fit: contain;
+    }
+
+    #structure3d {
+      width: 100% !important;
+      height: 600px !important;
+    }
+
+    .viewer-controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      padding: 15px 0;
+      border-top: 1px solid #eee;
+    }
+
+    .viewer-controls button {
+      padding: 10px 20px;
+      background: white;
+      border: 2px solid #3498db;
+      color: #3498db;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .viewer-controls button:hover {
+      background: #3498db;
+      color: white;
+    }
+
+    .structure-tabs {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      justify-content: center;
+      padding: 0 20px;
+    }
+
+    .tab-button {
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: 500;
+      border: 2px solid #e0e0e0;
+      background: white;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      min-width: 250px;
+      text-align: center;
+      color: #666;
+    }
+
+    .tab-button:hover {
+      background: #f8f9fa;
+      border-color: #3498db;
+      color: #3498db;
+    }
+
+    .tab-button.active {
+      background: #3498db;
+      color: white;
+      border-color: #3498db;
+      box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    #minimization-status {
+      text-align: center;
+      padding: 30px;
+      font-weight: 500;
+      color: #666;
+      font-size: 18px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    #minimization-status.error {
+      color: #e74c3c;
+      background: #fdf0ed;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #e74c3c;
+    }
+
+    #minimization-status.success {
+      display: none;
+    }
+
+    #structure3d-min {
+      display: none;  /* Oculto por defecto */
+    }
+
+    /* Añadir estos estilos al CSS existente */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loading-content {
+      background: white;
+      padding: 30px 50px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    .loading-text {
+      color: #2c3e50;
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 8px;  /* Añadir espacio entre texto principal y subtexto */
+    }
+
+    .loading-subtext {
+      color: #666;
+      font-size: 14px;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.4;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
+
+  <script defer src="https://cdn.overtracking.com/t/towjyRuCGXRl6Zi2o/"></script>
+  <!-- Agregar 3Dmol.js -->
+  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <script src="https://3Dmol.org/build/3Dmol.ui-min.js"></script>
+  <!-- Agregar jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-  <script defer src="https://cdn.overtracking.com/t/tBRNuychKhAMxJrAJ/"></script>
 <body>
+
+  <!-- Añadir esto justo después del div container -->
+  <div class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Trying to generate 3D structure...</div>
+      <div class="loading-subtext">This is a beta version and so it can fail, if you are not happy with the structure, try again and I will re-execute it with a different seed</div>
+    </div>
+  </div>
 
   <div class="container">
 
     <!-- Header -->
     <div class="header">
-      <h1>CyDexID Generator</h1>
+      <h1>CyDexID Generator: This tool generates unambiguous nomenclature for cyclodextrin monomers</h1>
     </div>
 
     <!-- Main Content -->
@@ -500,65 +1139,61 @@
           <button type="button" class="collapsible">Usage Instructions</button>
           <div class="collapsible-content">
             <p>This application generates CyDexID nomenclature for cyclodextrin molecules through an interactive interface:</p>
-            
-            <ol style="margin: 10px 0 20px 25px; line-height: 1.4;">
+            <ol style="margin: 2px 0 5px 12px; line-height: 1.2;">
               <li><strong>Basic Setup:</strong>
-                <ul style="margin: 5px 0 10px 20px;">
-                  <li>Select the number of residues (3-15) using the control panel</li>
-                  <li>The circular diagram shows the cyclodextrin structure where each point represents a glucose residue</li>
+                <ul style="margin: 1px 0 2px 8px;">
+                  <li>Select the number of glucopyranoside units (residues) using the control panel (4-15)</li>
+                  <li>The circular diagram shows the cyclodextrin structure where each hexagon represents a glucose residue</li>
                 </ul>
               </li>
-              
               <li><strong>Adding Modifications:</strong>
-                <ul style="margin: 5px 0 10px 20px;">
-                  <li>Drag mutations from the sidebar to specific positions in the diagram</li>
-                  <li>Position 6 points inward, while positions 2 and 3 point outward</li>
-                  <li>Create custom mutations using the "Add New Mutation" field</li>
+                <ul style="margin: 1px 0 2px 8px;">
+                  <li>Drag functional groups from the sidebar to the red circles in the diagram, corresponding to the primary alcohol (position 6, pointing inward) or secondary alcohols (positions 2 and 3, pointing outward)</li>
+                  <li>Create custom functional groups using the "Add New Functional Group" field</li>
                 </ul>
               </li>
-              
               <li><strong>Managing Chirality:</strong>
-                <ul style="margin: 5px 0 10px 20px;">
-                  <li>Double-click on mutation circles (positions 2, 3, 6) to toggle chirality changes</li>
-                  <li>Smaller circles at positions 1 and 4 represent additional chiral centers</li>
-                  <li>Double-click these centers to indicate chirality modifications</li>
+                <ul style="margin: 1px 0 2px 8px;">
+                  <li>Double-click on the red circles (positions 2, 3, and 6) to toggle chirality changes for the carbon atoms supporting the corresponding functional groups</li>
+                  <li>Smaller circles at positions 1 and 4 represent additional chiral centers. Double-click these circles to modify the chirality of their respective carbon atoms</li>
+                  <li>By default, all chiral centers retain the native chirality found in unmodified cyclodextrins</li>
+                  <li>When chirality is altered, the circle's color changes to visually indicate the modification</li>
                 </ul>
               </li>
-              
               <li><strong>Editing & Output:</strong>
-                <ul style="margin: 5px 0 10px 20px;">
-                  <li>Remove mutations by dragging their labels outside the diagram area</li>
+                <ul style="margin: 1px 0 2px 8px;">
+                  <li>To remove substituted functional groups, activate the cleaning mode (trash bin icon) and click on the substitution you want to remove</li>
                   <li>The nomenclature updates automatically in three formats below</li>
                   <li>Use the copy buttons to easily transfer the generated codes</li>
                 </ul>
               </li>
             </ol>
-
-            <p style="margin-top: 15px;"><em>Tip: Refer to the collapsible help panels in the sidebar for detailed information about position codes and chiral center configurations.</em></p>
+            <p style="margin-top: 5px;"><em>Tip: Refer to the collapsible help panels in the sidebar for detailed information about position codes and chiral center configurations.</em></p>
           </div>
         </div>
 
-        <h2>Controls</h2>
+        <div class="molecule-display">
+          <img src="GPUfinal.png" 
+               alt="molecule diagrams showing a simplified representation of a molecule with numbered nodes connected by lines of varying colors on the left, and a more detailed, chemically accurate representation with numbered nodes, bonds, and chemical symbols on the right" 
+               width="600" 
+               height="600">
+          <div class="molecule-info">
+            <p>Simplified representation of a <strong>glucopyranose ring</strong>.</p>
+            
+            <ul>
+              <li><strong>Positions 1 and 4</strong> are chiral centers</li>
+              <li><strong>Positions 2, 3, and 6</strong> are both chiral centers and potential sites for substitution, as indicated by the "R" groups</li>
+            </ul>
 
-        <label for="residue-count">Number of Residues (3-15):</label>
-        <input type="number" id="residue-count" min="3" max="15" value="7">
-
-        <label>Available Mutations:</label>
-        <div class="mutations" id="mutation-list">
-          <div class="mutation-item" draggable="true" data-type="SBE">SBE</div>
-          <div class="mutation-item" draggable="true" data-type="HP">HP</div>
-          <div class="mutation-item" draggable="true" data-type="MET">MET</div>
+            <p>This schematic allows clear visualization of both the chiral centers and the specific substitution sites, streamlining the complex molecular structure into an intuitive and interactive format that preserves all chemically relevant information.</p>
+          </div>
         </div>
-
-        <label for="new-mutation">Add New Mutation:</label>
-        <input type="text" id="new-mutation" placeholder="Enter mutation code">
-        <button id="add-mutation-button">Add Mutation</button>
 
         <!-- Help Panels -->
         <div class="help-panel">
           <button type="button" class="collapsible">Substitution Position Codes</button>
           <div class="collapsible-content">
-            <p>The position code follows a binary system for three possible substitution positions (2, 3 and 6):</p>
+            <p>The position code follows a 1-digit system for three possible substitution positions (2, 3 and 6) at each glucopyranoside ring:</p>
             <table>
               <tr>
                 <th>Code</th>
@@ -603,12 +1238,12 @@
             </table>
           </div>
 
-          <button type="button" class="collapsible">Chiral Center Conformations</button>
+          <button type="button" class="collapsible">Chiral Center Configurations</button>
           <div class="collapsible-content">
-            <p>By default, all glucose residues have natural chirality. Modifications at chiral centers are specified using specific position codes, with one digit per residue in the sequence:</p>
+            <p>By default, all glucopyranoside units in the sequence retain their natural chirality. Chirality changes at specific carbon atoms are encoded using a position-specific 1-digit code. Each unit in the sequence is represented by a single digit, and the code is prefixed with RS236 or RS14, depending on the positions being modified.</p>
             
-            <h4>For positions 2, 3 and 6 (RS236):</h4>
-            <p>Each residue in the sequence uses the same position codes as substitutions (2,3,5,6,8,9,1). The prefix RS236 applies to the entire sequence.</p>
+            <h4>RS236: Chirality Changes at Positions 2, 3, and 6</h4>
+            <p>The prefix RS236 indicates modifications at positions 2, 3, and 6 of the glucopyranoside units. Each code represents a specific combination of chirality changes.</p>
             <table>
               <tr>
                 <th>Code</th>
@@ -618,42 +1253,42 @@
               <tr>
                 <td>2</td>
                 <td>Position 2</td>
-                <td>Change of chirality at position 2</td>
+                <td>Chirality change at position 2</td>
               </tr>
               <tr>
                 <td>3</td>
                 <td>Position 3</td>
-                <td>Change of chirality at position 3</td>
+                <td>Chirality change at position 3</td>
               </tr>
               <tr>
                 <td>5</td>
                 <td>Positions 2,3</td>
-                <td>Changes of chirality at positions 2 and 3</td>
+                <td>Chirality change at positions 2 and 3</td>
               </tr>
               <tr>
                 <td>6</td>
                 <td>Position 6</td>
-                <td>Change of chirality at position 6</td>
+                <td>Chirality change at position 6</td>
               </tr>
               <tr>
                 <td>8</td>
                 <td>Positions 2,6</td>
-                <td>Changes of chirality at positions 2 and 6</td>
+                <td>Chirality change at positions 2 and 6</td>
               </tr>
               <tr>
                 <td>9</td>
                 <td>Positions 3,6</td>
-                <td>Changes of chirality at positions 3 and 6</td>
+                <td>Chirality change at positions 3 and 6</td>
               </tr>
               <tr>
                 <td>1</td>
                 <td>Positions 2,3,6</td>
-                <td>Changes of chirality at all positions</td>
+                <td>Chirality change at all positions</td>
               </tr>
             </table>
 
-            <h4>For positions 1 and 4 (RS14):</h4>
-            <p>Each residue in the sequence uses codes (1,4,5) for anomeric (1) and ring (4) positions. The prefix RS14 applies to the entire sequence.</p>
+            <h4>RS14: Chirality Changes at Positions 1 and 4</h4>
+            <p>The prefix RS14 is used for chirality changes at positions 1 (anomeric center) and 4 (ring position) of the glucopyranoside units.</p>
             <table>
               <tr>
                 <th>Code</th>
@@ -663,61 +1298,109 @@
               <tr>
                 <td>1</td>
                 <td>Position 1</td>
-                <td>Change of chirality at position 1</td>
+                <td>Chirality change at position 1</td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>Position 4</td>
-                <td>Change of chirality at position 4</td>
+                <td>Chirality change at position 4</td>
               </tr>
               <tr>
                 <td>5</td>
                 <td>Positions 1,4</td>
-                <td>Changes of chirality at positions 1 and 4</td>
+                <td>Chirality change at positions 1 and 4</td>
               </tr>
             </table>
           </div>
+
+          <div class="help-panel">
+            <button type="button" class="collapsible">Contact</button>
+            <div class="collapsible-content">
+              <h4>Main Authors:</h4>
+              <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>Rebeca García-Fandiño</strong>
+                  <br><a href="mailto:rebeca.garcia.fandino@usc.es">rebeca.garcia.fandino@usc.es</a>
+                </li>
+                <br>
+                <li><strong>Ángel Piñeiro</strong>
+                  <br><a href="mailto:angel.pineiro@usc.es">Angel.Pineiro@usc.es</a>
+                </li>
+              </ul>
+  
+              <p style="margin-top: 15px; font-size: 0.9em;">For questions, suggestions, or bug reports, please contact any of the authors above.</p>
+            </div>
+          </div>
+          
         </div>
 
       </div>
 
       <!-- Content Area -->
       <div class="content">
-        <h2>Map of the cyclodextrin structure onto its chiral center representation</h2>
         <div class="molecule-container">
           <div id="circular-display">
-            <!-- The Canvas and Drop Targets will be generated by JavaScript -->
+            <!-- Canvas and Drop Targets generated by JavaScript -->
           </div>
-          <div class="molecule-display">
-            <img src="GPUfinal.png" 
-                 alt="molecule diagrams showing a simplified representation of a molecule with numbered nodes connected by lines of varying colors on the left, and a more detailed, chemically accurate representation with numbered nodes, bonds, and chemical symbols on the right" 
-                 width="600" 
-                 height="600">
-            <div class="molecule-info">
-              <p>In the cyclodextrin representation, each <strong>green circle represents an entire glucopyranose ring</strong>, simplifying its detailed structure. The numbers <em>(1, 2, 3, 4, and 6)</em> correspond to key features of the glucopyranose unit:</p>
-              
-              <ul>
-                <li><strong>Positions 1 and 4</strong> are chiral centers</li>
-                <li><strong>Positions 2, 3, and 6</strong> are both chiral centers and potential sites for substitution, as indicated by the "R" groups</li>
-              </ul>
+          
+          <div class="controls-panel">
+            <div class="panel-header">
+              <h2>Controls</h2>
+            </div>
 
-              <p>This schematic allows clear visualization of both the chiral centers and the specific substitution sites, streamlining the complex molecular structure into an intuitive and interactive format that preserves all chemically relevant information.</p>
+            <div class="panel-content">
+              <label for="residue-count">Number of Glucopyranoside Units (4-15):</label>
+              <input type="number" id="residue-count" min="4" max="15" value="7">
+
+              <label>Available Functional Groups:</label>
+              <div class="mutations" id="mutation-list">
+                <div class="mutation-item" draggable="true" data-type="SBE">SBE</div>
+                <div class="mutation-item" draggable="true" data-type="HP">HP</div>
+                <div class="mutation-item" draggable="true" data-type="ME">ME</div>
+              </div>
+
+              <label for="new-mutation">Add New Functional Group:</label>
+              <div class="add-mutation-container">
+                <input type="text" id="new-mutation" placeholder="Enter substitution group code">
+                <button id="add-mutation-button">Add Functional Group</button>
+              </div>
+
+              <!-- Añadir el botón de Share Configuration -->
+              <div class="share-section">
+                <button id="share-button" class="btn btn-secondary w-100 mb-2">Share Configuration</button>
+                <button onclick="generateStructures()" id="generate" class="btn btn-primary w-100 mb-2">Generate 3D Structure</button>
+              </div>
+
+              <!-- Añadir el botón de limpieza aquí -->
+              <div class="clean-tool">
+                <div class="clean-tool-container">
+                  <span class="clean-tool-text">
+                    Substitutions clean mode (<span id="clean-mode-status">inactive</span>)
+                  </span>
+                  <button id="clean-mutation-button" title="Click to activate cleaning tool">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                      <path d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12z" 
+                            fill="currentColor"
+                            stroke="none"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Nomenclature -->
+        <!-- Nomenclature section continues below -->
         <div class="nomenclature">
           <h3>Generated Nomenclature</h3>
           
           <h4>Canonical Extended Nomenclature (CyDexID-EC)</h4>
-          <pre id="canonical-extended-nomenclature">No mutations applied.</pre>
+          <pre id="canonical-extended-nomenclature">No substitutions applied.</pre>
 
           <h4>Extended Nomenclature (CyDexID-E)</h4>
-          <pre id="extended-nomenclature">No mutations applied.</pre>
+          <pre id="extended-nomenclature">No substitutions applied.</pre>
 
           <h4>Compact Nomenclature (CyDexID-S)</h4>
-          <pre id="compact-nomenclature">No mutations applied.</pre>
+          <pre id="compact-nomenclature">No substitutions applied.</pre>
 
           <div class="buttons">
             <button onclick="copyText('canonical-extended-nomenclature')">Copy Canonical Extended Nomenclature</button>
@@ -725,6 +1408,348 @@
             <button onclick="copyText('compact-nomenclature')">Copy Compact Nomenclature</button>
           </div>
         </div>
+
+        <!-- Modificar el modal 3D existente -->
+        <div id="modal3D" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>3D Structure</h2>
+            
+            <!-- Añadir tabs -->
+            <div class="structure-tabs">
+              <button class="tab-button active" data-tab="non-minimized">Non-minimized Structure</button>
+              <button class="tab-button" data-tab="minimized">Minimized Structure</button>
+            </div>
+            
+            <!-- Contenido de las tabs -->
+            <div class="tab-content">
+              <div id="non-minimized" class="tab-pane active">
+                <div class="structure-single">
+                  <div id="structure3d-non-min" style="width: 100%; height: 800px; position: relative;"></div>
+                  <div class="viewer-controls">
+                    <button onclick="resetView('non-min')">Reset View</button>
+                    <button onclick="toggleSpin('non-min')">Toggle Spin</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="minimized" class="tab-pane">
+                <div class="structure-single">
+                  <div id="minimization-status">Running minimization...</div>
+                  <div id="structure3d-min" style="width: 100%; height: 800px; position: relative;"></div>
+                  <div class="viewer-controls">
+                    <button onclick="resetView('min')">Reset View</button>
+                    <button onclick="toggleSpin('min')">Toggle Spin</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <style>
+          /* Agregar Font Awesome para los iconos */
+          @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+          
+          .structure-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+          }
+          
+          .structure-buttons button {
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+          
+          .structure-buttons button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+          
+          .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 95%;
+            max-width: 1600px;
+            border-radius: 8px;
+          }
+          
+          .structure-single {
+            width: 100%;
+            margin-top: 20px;
+          }
+          
+          #structure2d {
+            width: 100%;
+            height: 800px;
+            object-fit: contain;
+          }
+          
+          #structure3d {
+            width: 100% !important;
+            height: 800px !important;
+          }
+        </style>
+
+        <script>
+          let structuresGenerated = false;
+          
+          async function generateStructures() {
+            const canonicalString = document.getElementById('canonical-extended-nomenclature').textContent;
+            if (canonicalString === 'No mutations applied.') {
+              alert('Please add some modifications before generating the structure.');
+              return;
+            }
+            
+            // Mostrar el overlay de carga
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            loadingOverlay.style.display = 'flex';
+            
+            try {
+              const response = await fetch('http://localhost:5000/generar_estructura', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  string_canonico: canonicalString
+                })
+              });
+              
+              const data = await response.json();
+              
+              // Ocultar el overlay de carga
+              loadingOverlay.style.display = 'none';
+              
+              if (data.success) {
+                window.pdbData_H = data.pdb_H;
+                window.userDir = data.user_dir;  // Guardar el directorio
+                show3DStructure();
+                
+                // Iniciar minimización en segundo plano
+                startMinimization();
+              } else {
+                alert('Error: ' + data.error);
+              }
+            } catch (error) {
+              // Ocultar el overlay de carga también en caso de error
+              loadingOverlay.style.display = 'none';
+              alert('Error connecting to server: ' + error);
+            }
+          }
+          
+          function show3DStructure() {
+            document.getElementById('modal3D').style.display = 'block';
+            
+            // Mostrar estructura no minimizada
+            showNonMinimizedStructure();
+            
+            // Configurar tabs
+            setupTabs();
+          }
+          
+          function showNonMinimizedStructure() {
+            try {
+                if (viewerNonMin) {
+                    viewerNonMin.clear();
+                }
+                
+                viewerNonMin = $3Dmol.createViewer('structure3d-non-min', {
+                    backgroundColor: 'white'
+                });
+                
+                viewerNonMin.addModel(window.pdbData_H, "pdb");
+                
+                // Primero, establecer el estilo para todos los átomos
+                viewerNonMin.setStyle({}, {
+                    stick: {
+                        radius: 0.2,
+                        colorscheme: 'cpk'
+                    }
+                });
+                
+                // Luego, específicamente para los hidrógenos
+                viewerNonMin.addStyle({elem: 'H'}, {
+                    sphere: {
+                        radius: 0.1,
+                        color: 'white'
+                    },
+                    stick: {
+                        radius: 0.1,
+                        color: 'white'
+                    }
+                });
+                
+                viewerNonMin.zoomTo();
+                viewerNonMin.render();
+            } catch (error) {
+                console.error('Error showing non-minimized structure:', error);
+            }
+          }
+          
+          async function startMinimization() {
+            const statusElement = document.getElementById('minimization-status');
+            const viewerElement = document.getElementById('structure3d-min');
+            
+            // Ocultar el visor y mostrar el mensaje de estado
+            viewerElement.style.display = 'none';
+            statusElement.style.display = 'block';
+            statusElement.textContent = 'Running minimization...';
+            statusElement.className = '';
+            
+            try {
+              const response = await fetch('http://localhost:5000/minimizar_estructura', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  pdb_data: window.pdbData_H,
+                  user_dir: window.userDir  // Pasar el directorio
+                })
+              });
+              
+              const data = await response.json();
+              
+              if (data.success) {
+                showMinimizedStructure(data.minimized_pdb);
+              } else {
+                statusElement.textContent = 'Minimization not successful';
+                statusElement.className = 'error';
+                viewerElement.style.display = 'none';
+              }
+            } catch (error) {
+              statusElement.textContent = 'Minimization failed';
+              statusElement.className = 'error';
+              viewerElement.style.display = 'none';
+            }
+          }
+          
+          function showMinimizedStructure(pdbData) {
+            try {
+                const statusElement = document.getElementById('minimization-status');
+                const viewerElement = document.getElementById('structure3d-min');
+                
+                if (viewerMin) {
+                    viewerMin.clear();
+                    viewerMin = null;
+                }
+                
+                viewerElement.style.display = 'block';
+                statusElement.style.display = 'none';
+                
+                viewerMin = $3Dmol.createViewer('structure3d-min', {
+                    backgroundColor: 'white'
+                });
+                
+                viewerMin.addModel(pdbData, "pdb");
+                
+                // Primero, establecer el estilo para todos los átomos
+                viewerMin.setStyle({}, {
+                    stick: {
+                        radius: 0.2,
+                        colorscheme: 'cpk'
+                    }
+                });
+                
+                // Luego, específicamente para los hidrógenos
+                viewerMin.addStyle({elem: 'H'}, {
+                    sphere: {
+                        radius: 0.1,
+                        color: 'white'
+                    },
+                    stick: {
+                        radius: 0.1,
+                        color: 'white'
+                    }
+                });
+                
+                viewerMin.zoomTo();
+                viewerMin.render();
+            } catch (error) {
+                console.error('Error showing minimized structure:', error);
+            }
+          }
+          
+          function setupTabs() {
+            const tabs = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => {
+              tab.addEventListener('click', () => {
+                // Desactivar todas las tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                
+                // Activar la tab seleccionada
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+              });
+            });
+          }
+          
+          function resetView(type) {
+            const viewer = type === 'min' ? viewerMin : viewerNonMin;
+            if (viewer) {
+              viewer.zoomTo();
+              viewer.render();
+            }
+          }
+          
+          function toggleSpin(type) {
+            if (type === 'min') {
+              if (viewerMin) {
+                isSpinningMin = !isSpinningMin;
+                viewerMin.spin(isSpinningMin);
+              }
+            } else {
+              if (viewerNonMin) {
+                isSpinningNonMin = !isSpinningNonMin;
+                viewerNonMin.spin(isSpinningNonMin);
+              }
+            }
+          }
+          
+          // Manejadores para cerrar el modal
+          document.querySelectorAll('.close').forEach(button => {
+            button.addEventListener('click', function() {
+              const modal = this.closest('.modal');
+              if (modal) {
+                modal.style.display = 'none';
+                if (viewerNonMin) {
+                  viewerNonMin.spin(false);
+                  isSpinningNonMin = false;
+                  viewerNonMin = null;
+                }
+                if (viewerMin) {
+                  viewerMin.spin(false);
+                  isSpinningMin = false;
+                  viewerMin = null;
+                }
+              }
+            });
+          });
+          
+          window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+              event.target.style.display = 'none';
+              if (viewerNonMin) {
+                viewerNonMin.spin(false);
+                isSpinningNonMin = false;
+                viewerNonMin = null;
+              }
+              if (viewerMin) {
+                viewerMin.spin(false);
+                isSpinningMin = false;
+                viewerMin = null;
+              }
+            }
+          });
+        </script>
       </div>
 
     </div>
@@ -771,11 +1796,18 @@
     // Event Listeners for Help Panels
     document.querySelectorAll('.collapsible').forEach(button => {
       button.addEventListener("click", function() {
+        // Toggle la clase active en el botón actual
         this.classList.toggle("active");
-        const content = this.nextElementSibling;
+        
+        // Obtener el contenido asociado
+        var content = this.nextElementSibling;
+        
+        // Toggle la visibilidad del contenido
         if (content.style.maxHeight) {
           content.style.maxHeight = null;
+          content.style.display = "none";
         } else {
+          content.style.display = "block";
           content.style.maxHeight = content.scrollHeight + "px";
         }
       });
@@ -836,6 +1868,7 @@
     // Initialize
     drawStructure();
     createDropTargets();
+    drawHexagons();
     updateNomenclature();
 
     // Add dragstart listeners to existing mutations
@@ -940,7 +1973,7 @@
           const position = parseInt(dropTarget.dataset.position);
           const mutationType = element.touchData;
           
-          // Check for existing mutation
+          // Check if there's already any mutation in this position and residue
           const existingMutation = mutations.find(mutation =>
             mutation.residueIndex === residueIndex &&
             mutation.position === position
@@ -968,16 +2001,22 @@
 
     function updateResidueCount() {
       let newCount = parseInt(residueCountInput.value);
-      if (newCount < 3 || newCount > 15) {
-        alert('Please enter a number of residues between 3 and 15.');
+      if (newCount < 4 || newCount > 15) {  // Cambiar 3 por 4 aquí
+        alert('Please enter a number of Glucopyranoside units between 4 and 15.');
         residueCountInput.value = residueCount;
         return;
       }
       residueCount = newCount;
       mutations = [];
       chiralMutations = [];
+
+      const circularDisplay = document.getElementById('circular-display');
+      const elementsToRemove = circularDisplay.querySelectorAll('.drop-target, .chiral-center, .mutation-label');
+      elementsToRemove.forEach(el => el.remove());
+      
       drawStructure();
       createDropTargets();
+      drawHexagons();
       updateNomenclature();
     }
 
@@ -993,134 +2032,165 @@
       ctx.strokeStyle = primaryColor;
       ctx.lineWidth = 3;
       ctx.stroke();
+    }
 
-      // Draw residues
+    function drawHexagons() {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 200;
+      
+      // Dibujar hexágonos para cada residuo
       for (let i = 0; i < residueCount; i++) {
-        const angle = (i * 2 * Math.PI) / residueCount - Math.PI / 2;
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
-
-        // Draw circle for each residue
-        ctx.beginPath();
-        ctx.arc(x, y, 12, 0, Math.PI * 2);
-        ctx.fillStyle = secondaryColor;
-        ctx.fill();
-
-        // Draw residue number
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 14px Roboto';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(i + 1, x, y);
+          const angle = (i * 2 * Math.PI) / residueCount - Math.PI / 2;
+          const x = centerX + radius * Math.cos(angle);
+          const y = centerY + radius * Math.sin(angle);
+          
+          // Tamaño del hexágono
+          const hexSize = 20;
+          
+          // Calcular los vértices del hexágono
+          // Ajustamos el ��ngulo inicial para que los vértices 1 y 4 estén sobre el perímetro
+          const vertices = [];
+          for (let j = 0; j < 6; j++) {
+              // Rotamos 30 grados (π/6) para que los vértices 1 y 4 estén sobre el perímetro
+              const vertexAngle = angle + (j * Math.PI / 3) + Math.PI/6;
+              vertices.push({
+                  x: x + hexSize * Math.cos(vertexAngle),
+                  y: y + hexSize * Math.sin(vertexAngle)
+              });
+          }
+  
+          // Dibujar hexágono
+          ctx.beginPath();
+          ctx.moveTo(vertices[0].x, vertices[0].y);
+          for (let j = 1; j < 6; j++) {
+              ctx.lineTo(vertices[j].x, vertices[j].y);
+          }
+          ctx.closePath();
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          ctx.strokeStyle = secondaryColor;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+  
+          // Dibujar círculo rojo en el vértice 5
+          ctx.beginPath();
+          ctx.arc(vertices[3].x, vertices[3].y, 6, 0, Math.PI * 2); // Aumentar el tamaño del círculo
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          ctx.strokeStyle = '#FF0000'; // Rojo más brillante
+          ctx.lineWidth = 1;
+          ctx.stroke();
       }
     }
 
     function createDropTargets() {
-      // Remove only drop targets and chiral centers, preserve mutation labels
-      const existingElements = document.querySelectorAll('.drop-target, .chiral-center');
-      existingElements.forEach(el => el.remove());
-
-      // Create new drop targets and chiral centers
-      for (let i = 0; i < residueCount; i++) {
-        const angle = (i * 2 * Math.PI) / residueCount - Math.PI / 2;
-        const positions = [1, 2, 3, 4, 6];
-
-        positions.forEach(pos => {
-          let offsetAngle, distance, className;
-
-          if (pos === 6) {
-            // Position 6 towards the inside
-            offsetAngle = angle;
-            distance = 170;
-            className = 'drop-target';
-          } else if (pos === 2 || pos === 3) {
-            // Positions 2 and 3 towards the outside
-            const direction = pos === 2 ? -1 : 1;
-            offsetAngle = angle + (direction * Math.PI / 20); // Changed from Math.PI / 16 to Math.PI / 20 for closer positioning
-            distance = 230;
-            className = 'drop-target';
-          } else if (pos === 1 || pos === 4) {
-            // Positions 1 and 4 (chiral centers)
-            const direction = pos === 1 ? -1 : 1;
-            offsetAngle = angle + (direction * Math.PI / 16); // Changed from Math.PI/12 to Math.PI/16 for closer positioning
-            distance = 195; // Changed from 200 to 195 to bring them closer to residue
-            className = 'chiral-center';
-            
-            // Get residue center coordinates for line drawing
-            const residueX = canvas.width / 2 + 200 * Math.cos(angle);
-            const residueY = canvas.height / 2 + 200 * Math.sin(angle);
-            
-            // Draw connecting line
-            ctx.beginPath();
-            ctx.moveTo(residueX, residueY);
+        // Remove only drop targets and chiral centers, preserve mutation labels
+        const existingElements = document.querySelectorAll('.drop-target, .chiral-center');
+        existingElements.forEach(el => el.remove());
+  
+        // Create new drop targets and chiral centers
+        for (let i = 0; i < residueCount; i++) {
+          const angle = (i * 2 * Math.PI) / residueCount - Math.PI / 2;
+          const positions = [1, 2, 3, 4, 6];
+  
+          positions.forEach(pos => {
+            let offsetAngle, distance, className;
+  
+            if (pos === 6) {
+              // Position 6 towards the inside
+              const direction = 1;
+              offsetAngle = angle + (direction * Math.PI / 20);
+              distance = 160;
+              className = 'drop-target';
+            } else if (pos === 2 || pos === 3) {
+              // Positions 2 and 3 towards the outside
+              const direction = pos === 2 ? -1 : 1;
+              offsetAngle = angle + (direction * Math.PI / 40); // Cambiado de Math.PI/20 a Math.PI/30 para acercar más las posiciones
+              distance = 230;
+              className = 'drop-target';
+            } else if (pos === 1 || pos === 4) {
+              // Positions 1 and 4 (chiral centers)
+              const direction = pos === 1 ? -1 : 1;
+              offsetAngle = angle + (direction * Math.PI / 20); // Reducido de Math.PI/16 a Math.PI/24 para acercar más al hexágono
+              distance = 200; // Reducido de 200 a 185 para acercar más al hexágono
+              className = 'chiral-center';
+              
+              // Get residue center coordinates for line drawing
+              const residueX = canvas.width / 2 + 200 * Math.cos(angle);
+              const residueY = canvas.height / 2 + 200 * Math.sin(angle);
+              
+              // Draw connecting line
+              ctx.beginPath();
+              ctx.moveTo(residueX, residueY);
+              const x = canvas.width / 2 + distance * Math.cos(offsetAngle);
+              const y = canvas.height / 2 + distance * Math.sin(offsetAngle);
+              ctx.lineTo(x, y);
+              ctx.strokeStyle = '#9b59b6'; // Use chiral color
+              ctx.lineWidth = 1;
+              ctx.setLineDash([2, 2]); // Make line dashed
+              ctx.stroke();
+              ctx.setLineDash([]); // Reset line style
+            }
+  
             const x = canvas.width / 2 + distance * Math.cos(offsetAngle);
             const y = canvas.height / 2 + distance * Math.sin(offsetAngle);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = '#9b59b6'; // Use chiral color
-            ctx.lineWidth = 1;
-            ctx.setLineDash([2, 2]); // Make line dashed
-            ctx.stroke();
-            ctx.setLineDash([]); // Reset line style
-          }
-
-          const x = canvas.width / 2 + distance * Math.cos(offsetAngle);
-          const y = canvas.height / 2 + distance * Math.sin(offsetAngle);
-
-          const element = document.createElement('div');
-          element.className = className;
-          element.style.left = `${x}px`;
-          element.style.top = `${y}px`;
-          element.dataset.residueIndex = i;
-          element.dataset.position = pos;
-
-          if (className === 'drop-target') {
-            element.addEventListener('dragover', handleDragOver);
-            element.addEventListener('drop', handleDrop);
-            element.addEventListener('dragleave', () => element.classList.remove('active'));
-            element.addEventListener('dblclick', handleChiralDoubleClick);
-
-            // Check if there is a chiral mutation in this position
-            const isChiral = chiralMutations.some(mutation =>
-              mutation.residueIndex === i && mutation.position === pos
-            );
-            if (isChiral) {
-              element.classList.add('chiral');
+  
+            const element = document.createElement('div');
+            element.className = className;
+            element.style.left = `${x}px`;
+            element.style.top = `${y}px`;
+            element.dataset.residueIndex = i;
+            element.dataset.position = pos;
+  
+            if (className === 'drop-target') {
+              element.addEventListener('dragover', handleDragOver);
+              element.addEventListener('drop', handleDrop);
+              element.addEventListener('dragleave', () => element.classList.remove('active'));
+              element.addEventListener('dblclick', handleChiralDoubleClick);
+  
+              // Check if there is a chiral mutation in this position
+              const isChiral = chiralMutations.some(mutation =>
+                mutation.residueIndex === i && mutation.position === pos
+              );
+              if (isChiral) {
+                element.classList.add('chiral');
+              } else {
+                element.classList.remove('chiral');
+              }
+  
+              circularDisplay.appendChild(element);
+  
+              // Draw lines from the residue to the drop target
+              const residueX = canvas.width / 2 + 200 * Math.cos(angle);
+              const residueY = canvas.height / 2 + 200 * Math.sin(angle);
+  
+              ctx.beginPath();
+              ctx.moveTo(residueX, residueY);
+              ctx.lineTo(x, y);
+              ctx.strokeStyle = highlightColor;
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
             } else {
-              element.classList.remove('chiral');
+              // Chiral centers in positions 1 and 4
+              element.addEventListener('dblclick', handleChiralDoubleClick);
+  
+              // Check if there is a chiral mutation in this position
+              const isChiral = chiralMutations.some(mutation =>
+                mutation.residueIndex === i && mutation.position === pos
+              );
+              if (isChiral) {
+                element.classList.add('active');
+              } else {
+                element.classList.remove('active');
+              }
+  
+              circularDisplay.appendChild(element);
             }
-
-            circularDisplay.appendChild(element);
-
-            // Draw lines from the residue to the drop target
-            const residueX = canvas.width / 2 + 200 * Math.cos(angle);
-            const residueY = canvas.height / 2 + 200 * Math.sin(angle);
-
-            ctx.beginPath();
-            ctx.moveTo(residueX, residueY);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = highlightColor;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-          } else {
-            // Chiral centers in positions 1 and 4
-            element.addEventListener('dblclick', handleChiralDoubleClick);
-
-            // Check if there is a chiral mutation in this position
-            const isChiral = chiralMutations.some(mutation =>
-              mutation.residueIndex === i && mutation.position === pos
-            );
-            if (isChiral) {
-              element.classList.add('active');
-            } else {
-              element.classList.remove('active');
-            }
-
-            circularDisplay.appendChild(element);
-          }
-        });
+          });
+        }
       }
-    }
-
+    
     function handleChiralDoubleClick(event) {
       const residueIndex = parseInt(event.currentTarget.dataset.residueIndex);
       const position = parseInt(event.currentTarget.dataset.position);
@@ -1256,9 +2326,13 @@
 
     function updateNomenclature() {
       if (mutations.length === 0 && chiralMutations.length === 0) {
-        extendedNomenclatureOutput.textContent = 'No mutations applied.';
-        compactNomenclatureOutput.textContent = 'No mutations applied.';
-        canonicalExtendedNomenclatureOutput.textContent = 'No mutations applied.';
+        //extendedNomenclatureOutput.textContent = 'No chemical modifications are present in the native structure of the CD.';
+        compactNomenclatureOutput.textContent = 'No chemical modifications are present in the native structure of the CD.';
+        canonicalExtendedNomenclatureOutput.textContent = 'No chemical modifications are present in the native structure of the CD.';
+        const n = residueCount; // Número de residuos activos
+        const zeros = '0'.repeat(n);
+        let gpuString = `GPU_0_${n}x${zeros}`;
+        canonicalExtendedNomenclatureOutput.textContent = gpuString;
         return;
       }
 
@@ -1348,7 +2422,14 @@
 
       // Calculate and display canonical extended nomenclature
       const canonicalExtended = calculateCanonicalExtendedNomenclature(extendedNomenclature);
-      canonicalExtendedNomenclatureOutput.textContent = canonicalExtended;
+      
+      // Si no hay sustituciones, añadir prefijo GPU_0_nx0...0_
+      if (!mutations.length) {
+        const zeros = '0'.repeat(residueCount);
+        canonicalExtendedNomenclatureOutput.textContent = `GPU_0_${residueCount}x${zeros}_${canonicalExtended}`;
+      } else {
+        canonicalExtendedNomenclatureOutput.textContent = canonicalExtended;
+      }
 
       // Update Outputs
       extendedNomenclatureOutput.textContent = extendedNomenclature;
@@ -1476,7 +2557,7 @@
     function addNewMutation() {
       const mutationType = newMutationInput.value.trim();
       if (mutationType === '') {
-        alert('Please enter a mutation code.');
+        alert('Please enter a code for the new fuctional group.');
         return;
       }
 
@@ -1501,8 +2582,261 @@
       mutationList.appendChild(mutationItem);
       newMutationInput.value = '';
     }
+
+    // Agregar estos event listeners después de que el DOM esté cargado
+    document.addEventListener('DOMContentLoaded', function() {
+        // Event listener para el botón de compartir
+        document.getElementById('share-button').addEventListener('click', () => {
+            const shareUrl = generateShareLink();
+            
+            // Usar el API moderno del portapapeles
+            navigator.clipboard.writeText(shareUrl)
+                .then(() => {
+                    const shareButton = document.getElementById('share-button');
+                    const originalText = shareButton.textContent;
+                    shareButton.textContent = 'Link Copied!';
+                    setTimeout(() => {
+                        shareButton.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Error copying text:', err);
+                    // Fallback para navegadores que no soportan el API del portapapeles
+                    const tempInput = document.createElement('input');
+                    document.body.appendChild(tempInput);
+                    tempInput.value = shareUrl;
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    
+                    const shareButton = document.getElementById('share-button');
+                    const originalText = shareButton.textContent;
+                    shareButton.textContent = 'Link Copied!';
+                    setTimeout(() => {
+                        shareButton.textContent = originalText;
+                    }, 2000);
+                });
+        });
+
+        // Event listener para el botón de copiar
+        document.getElementById('copy-url-button').addEventListener('click', () => {
+            const shareUrlInput = document.getElementById('share-url');
+            shareUrlInput.select();
+            navigator.clipboard.writeText(shareUrlInput.value)
+                .then(() => {
+                    const copyButton = document.getElementById('copy-url-button');
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Error copying text:', err);
+                    alert('Failed to copy text to clipboard');
+                });
+        });
+    });
+
+    // Función para generar el enlace de compartir
+    function generateShareLink() {
+        const config = {
+            residueCount: residueCount,
+            mutations: mutations,
+            chiralMutations: chiralMutations
+        };
+        
+        // Convertir la configuración a Base64 para hacerla más corta y URL-friendly
+        const encodedConfig = btoa(JSON.stringify(config));
+        const shareUrl = `${window.location.origin}${window.location.pathname}?config=${encodedConfig}`;
+        
+        return shareUrl;
+    }
+
+    // Función para cargar una configuración compartida
+    function loadSharedConfig() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const encodedConfig = urlParams.get('config');
+        
+        if (encodedConfig) {
+            try {
+                const config = JSON.parse(atob(encodedConfig));
+                
+                // Actualizar el número de residuos
+                residueCount = config.residueCount;
+                document.getElementById('residue-count').value = residueCount;
+                
+                // Cargar mutaciones
+                mutations = config.mutations;
+                chiralMutations = config.chiralMutations;
+                
+                // Actualizar la lista de grupos funcionales
+                const mutationList = document.getElementById('mutation-list');
+                mutationList.innerHTML = ''; // Limpiar la lista actual
+                
+                // Crear un Set para tener grupos funcionales únicos
+                const uniqueTypes = new Set(mutations.map(m => m.mutationType));
+                
+                // Agregar los grupos funcionales predeterminados si no están ya incluidos
+                ['SBE', 'HP', 'ME'].forEach(type => uniqueTypes.add(type));
+                
+                // Crear elementos para cada grupo funcional
+                uniqueTypes.forEach(type => {
+                    const mutationItem = document.createElement('div');
+                    mutationItem.className = 'mutation-item';
+                    mutationItem.draggable = true;
+                    mutationItem.dataset.type = type;
+                    mutationItem.textContent = type;
+                    
+                    // Agregar manejadores de eventos
+                    addDragAndTouchHandlers(mutationItem);
+                    
+                    mutationList.appendChild(mutationItem);
+                });
+                
+                // Redibujar todo
+                drawStructure();
+                createDropTargets();
+                drawHexagons();
+                
+                // Recrear las etiquetas de mutación
+                mutations.forEach(mutation => {
+                    displayMutationLabel(mutation.residueIndex, mutation.position, mutation.mutationType);
+                });
+                
+                updateNomenclature();
+            } catch (error) {
+                console.error('Error loading shared configuration:', error);
+            }
+        }
+    }
+
+    // Cargar configuración compartida al iniciar
+    loadSharedConfig();
+
+    // Variables globales
+    let cleaningMode = false;
+
+    // Función para activar/desactivar el modo limpieza
+    function toggleCleaningMode() {
+        const button = document.getElementById('clean-mutation-button');
+        const status = document.getElementById('clean-mode-status');
+        const container = document.querySelector('.clean-tool-container');
+        cleaningMode = !cleaningMode;
+        
+        if (cleaningMode) {
+            button.classList.add('active');
+            status.textContent = 'active';
+            container.classList.add('active');
+        } else {
+            button.classList.remove('active');
+            status.textContent = 'inactive';
+            container.classList.remove('active');
+        }
+    }
+
+    // Función para limpiar una posición
+    function cleanMutation(event) {
+        if (!cleaningMode) return;
+        
+        const target = event.target;
+        if (!target.classList.contains('drop-target')) return;
+        
+        const residueIndex = parseInt(target.dataset.residueIndex);
+        const position = parseInt(target.dataset.position);
+
+        // Eliminar todas las mutaciones en esta posición
+        const mutationsToRemove = mutations.filter(m => 
+            m.residueIndex === residueIndex && 
+            m.position === position
+        );
+
+        mutationsToRemove.forEach(mutation => {
+            const index = mutations.indexOf(mutation);
+            if (index !== -1) {
+                mutations.splice(index, 1);
+                
+                // Eliminar la etiqueta visual
+                const label = document.querySelector(
+                    `.mutation-label[data-residue-index="${residueIndex}"][data-position="${position}"]`
+                );
+                if (label) {
+                    label.remove();
+                }
+            }
+        });
+
+        updateNomenclature();
+    }
+
+    // Inicializar los event listeners
+    document.getElementById('clean-mutation-button').addEventListener('click', toggleCleaningMode);
+    document.addEventListener('click', cleanMutation);
+
+    // Variables globales
+    let viewerNonMin = null;
+    let viewerMin = null;
+    let isSpinningNonMin = false;
+    let isSpinningMin = false;
+
+    function resetView(type) {
+      const viewer = type === 'min' ? viewerMin : viewerNonMin;
+      if (viewer) {
+        viewer.zoomTo();
+        viewer.render();
+      }
+    }
+
+    function toggleSpin(type) {
+      if (type === 'min') {
+        if (viewerMin) {
+          isSpinningMin = !isSpinningMin;
+          viewerMin.spin(isSpinningMin);
+        }
+      } else {
+        if (viewerNonMin) {
+          isSpinningNonMin = !isSpinningNonMin;
+          viewerNonMin.spin(isSpinningNonMin);
+        }
+      }
+    }
+
+    // Manejadores para cerrar el modal
+    document.querySelectorAll('.close').forEach(button => {
+      button.addEventListener('click', function() {
+        const modal = this.closest('.modal');
+        if (modal) {
+          modal.style.display = 'none';
+          if (viewerNonMin) {
+            viewerNonMin.spin(false);
+            isSpinningNonMin = false;
+            viewerNonMin = null;
+          }
+          if (viewerMin) {
+            viewerMin.spin(false);
+            isSpinningMin = false;
+            viewerMin = null;
+          }
+        }
+      });
+    });
+
+    window.addEventListener('click', function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+        if (viewerNonMin) {
+          viewerNonMin.spin(false);
+          isSpinningNonMin = false;
+          viewerNonMin = null;
+        }
+        if (viewerMin) {
+          viewerMin.spin(false);
+          isSpinningMin = false;
+          viewerMin = null;
+        }
+      }
+    });
   </script>
 
 </body>
 </html>
-
